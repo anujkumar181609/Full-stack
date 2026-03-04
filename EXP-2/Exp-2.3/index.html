@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG Drawing Tool</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        svg {
+            background: white;
+            border: 2px solid #333;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Interactive SVG Drawing Tool</h2>
+<p>Click and drag to draw</p>
+
+<svg id="drawingArea" width="600" height="400"></svg>
+
+<script>
+    const svg = document.getElementById("drawingArea");
+
+    let isDrawing = false;
+    let currentPath = null;
+
+    svg.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+
+        const point = getMousePosition(e);
+
+        currentPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        currentPath.setAttribute("stroke", "black");
+        currentPath.setAttribute("stroke-width", "2");
+        currentPath.setAttribute("fill", "none");
+        currentPath.setAttribute("d", `M ${point.x} ${point.y}`);
+
+        svg.appendChild(currentPath);
+    });
+
+    svg.addEventListener("mousemove", (e) => {
+        if (!isDrawing) return;
+
+        const point = getMousePosition(e);
+        let d = currentPath.getAttribute("d");
+        currentPath.setAttribute("d", d + ` L ${point.x} ${point.y}`);
+    });
+
+    svg.addEventListener("mouseup", () => {
+        isDrawing = false;
+        currentPath = null;
+    });
+
+    svg.addEventListener("mouseleave", () => {
+        isDrawing = false;
+        currentPath = null;
+    });
+
+    function getMousePosition(event) {
+        const rect = svg.getBoundingClientRect();
+        return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+        };
+    }
+</script>
+
+</body>
+</html>

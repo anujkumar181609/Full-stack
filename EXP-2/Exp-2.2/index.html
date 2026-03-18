@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Product Filter</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card h4 {
+            margin: 0 0 10px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Product Filter</h2>
+
+<div class="controls">
+    <select id="category">
+        <option value="all">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+    </select>
+
+    <select id="priceSort">
+        <option value="default">Sort by Price</option>
+        <option value="low">Low → High</option>
+        <option value="high">High → Low</option>
+    </select>
+</div>
+
+<div id="productContainer" class="products"></div>
+
+<script>
+    const products = [
+        { name: "Laptop", price: 50000, category: "electronics" },
+        { name: "Headphones", price: 2000, category: "electronics" },
+        { name: "T-Shirt", price: 800, category: "fashion" },
+        { name: "Shoes", price: 3000, category: "fashion" }
+    ];
+
+    const container = document.getElementById("productContainer");
+    const category = document.getElementById("category");
+    const priceSort = document.getElementById("priceSort");
+
+    function renderProducts(list) {
+        container.innerHTML = "";
+
+        list.forEach(item => {
+            container.innerHTML += `
+                <div class="card">
+                    <h4>${item.name}</h4>
+                    <p class="price">₹${item.price}</p>
+                    <small>${item.category}</small>
+                </div>
+            `;
+        });
+    }
+
+    function applyFilter() {
+        let filtered = [...products];
+
+        if (category.value !== "all") {
+            filtered = filtered.filter(p => p.category === category.value);
+        }
+
+        if (priceSort.value === "low") {
+            filtered.sort((a, b) => a.price - b.price);
+        } else if (priceSort.value === "high") {
+            filtered.sort((a, b) => b.price - a.price);
+        }
+
+        renderProducts(filtered);
+    }
+
+    category.addEventListener("change", applyFilter);
+    priceSort.addEventListener("change", applyFilter);
+
+    renderProducts(products);
+</script>
+
+</body>
+</html>

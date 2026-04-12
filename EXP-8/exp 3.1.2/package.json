@@ -1,0 +1,9 @@
+{
+  "name": "exp-3.1.2",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm --prefix client install",
+    "build": "npm --prefix client run build"
+  }
+}
